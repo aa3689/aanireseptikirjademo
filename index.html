@@ -17,11 +17,16 @@
   let i = 0;
   const img = `/resepti/${i}.png`
   function speakOhje() {
-    responsiveVoice.speak(ohjeArray[i], 'Finnish Female', { rate: 1 })
-    i++;
-    const img = document.getElementById("image");
-    img.src = `resepti/${i}.png`;
-    console.log(i)
+    if (i < ohjeArray.length) {
+      responsiveVoice.speak(ohjeArray[i], 'Finnish Female', { rate: 1 })
+      i++;
+      const img = document.getElementById("image");
+      img.src = `resepti/${i}.png`;
+      console.log(i)
+    } else {
+      responsiveVoice.speak('Valmista tuli. Ääniohjaus lopetetaan.', 'Finnish Female', { rate: 1 })
+      stopArtyom();
+    }
   }
 
   const artyom = new Artyom();
@@ -76,11 +81,18 @@
     console.log("Demo ended")
     stopArtyom();
   }, false);
+
+  document.getElementById("startManually").addEventListener("click", function () {
+    speakOhje();
+  }, false);
 </script>
 
 <body>
   <img id="image" src="resepti/0.png">
 
+  <h2>Ilman ääniohjausta</h2>
+  <button id="startManually">Aloita / seuraava vaihe</button>
+  <h2>Ääniohjauksella</h2>
   <button id="start">Aloita ääniohjaus</button>
   <button id="stop">Lopeta ääniohjaus</button>
 </body>
