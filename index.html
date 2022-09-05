@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Äänikeittokirja</title>
+</head>
+<script
+  src="https://code.responsivevoice.org/responsivevoice.js?key=XASvFH7I"></script>
+<script src="artyom.min.js"></script>
+
+<script type="module">
+  const ohjeArray = ['Keitä makaronit pakkauksen ohjeen mukaan.', 'Ruskista jauheliha ja sipuli. Mausta suolalla ja pippurilla.', 'Kaada kypsät makaronit ja jauheliha vuokaan ja sekoita.', 'Sekoita maito ja kananmunat ja kaada vuokaan.', 'Paista makaronilaatikkoa 200 asteessa noin tunti.'];
+
+  let i = 0;
+  const img = `/resepti/${i}.png`
+  function speakOhje() {
+    responsiveVoice.speak(ohjeArray[i], 'Finnish Female', { rate: 1 })
+    i++;
+    const img = document.getElementById("image");
+    img.src = `resepti/${i}.png`;
+    console.log(i)
+  }
+
+  const artyom = new Artyom();
+
+  // Käynnistys
+  function startArtoym() {
+    artyom.initialize({
+      lang: "en-GB", // GreatBritain english
+      continuous: true, // Listen forever
+      soundex: true, // Use the soundex algorithm to increase accuracy
+      debug: true, // Show messages in the console
+      listen: true, // Start to listen commands !
+      speed: 1, // talk normally
+    }).then(() => {
+      console.log("Artyom has been succesfully initialized");
+    }).catch((err) => {
+      console.error("Artyom couldn't be initialized: ", err);
+    });
+  }
+
+  // Lopetus
+  function stopArtyom() {
+    artyom.fatality().then(() => {
+      console.log("Artyom succesfully stopped");
+    });
+  }
+
+  // Komennot
+  artyom.addCommands([
+    {
+      indexes: ["start", "next", "back"],
+      action: function (i) {
+        if (i == 0) {
+          console.log("Start sanottu")
+          speakOhje();
+        } else if (i == 1) {
+          console.log("Next sanottu")
+          speakOhje();
+        }
+      }
+    }
+  ])
+
+  // Needed user interaction at least once in the website to make
+  // it work automatically without user interaction later
+  document.getElementById("start").addEventListener("click", function () {
+    console.log("Demo started")
+    startArtoym();
+  }, false);
+
+  document.getElementById("stop").addEventListener("click", function () {
+    console.log("Demo ended")
+    stopArtyom();
+  }, false);
+</script>
+
+<body>
+  <img id="image" src="resepti/0.png">
+
+  <button id="start">Aloita ääniohjaus</button>
+  <button id="stop">Lopeta ääniohjaus</button>
+</body>
+
+</html>
